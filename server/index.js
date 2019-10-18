@@ -4,25 +4,26 @@ var db = require('../database/index.js');
 
 var app = express();
 
-app.use(express.static(__dirname + '/../public/dist'));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(__dirname + '/../public/'));
 
 app.get('/guests', (req, res) => {
   db.fetch().then((data) => {
     res.status(200);
     res.send(JSON.stringify(data));
-    }).catch((err) => {
-      res.status(500).send({error: 'Unable to fetch guests from database'});
-    });
+  }).catch((err) => {
+    res.status(500).send({error: 'Unable to fetch guests from database'});
   });
 });
 
 app.post('/guests', (req, res) => {
-  db.save(req.body).then((data) => {
+  if (req.body) {
+    db.save(req.body);
     res.status(201);
     res.send('Posted!');
-  }).catch((err) => {
+  } else {
     res.status(500).send({error: 'Unable to post to database'});
-  });
+  };
 });
 
 app.put('/guests', (req, res) => {
@@ -34,8 +35,8 @@ app.put('/guests', (req, res) => {
   });
 });
 
-app.delete('/guests, (req, res' => {
-  db.delete(req.body).then((data) => {
+app.delete('/guests', (req, res) => {
+  db.remove(req.body).then((data) => {
     res.status(200);
     res.send('Deleted!');
   }).catch((err) => {
