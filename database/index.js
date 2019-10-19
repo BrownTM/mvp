@@ -21,17 +21,18 @@ var guestSchema = mongoose.Schema({
 var Guest = mongoose.model('Guest', guestSchema);
 
 var fetch = function(callback) {
-  return Guest.find({});
+  Guest.find({}, callback);
 };
 
 var save = (guest) => {
-  Guest.findOne({name: guest.name}, (err) => {
-    if (err) {
+  var beingAdded = guest;
+  Guest.findOne({name: beingAdded.name}, (data) => {
+    if (data === null) {
       var guest = new Guest({
-        name: guest.name,
-        rsvp: guest.rsvp,
-        meal: guest.meal,
-        table: guest.table
+        name: beingAdded.name,
+        rsvp: beingAdded.rsvp,
+        meal: beingAdded.meal,
+        table: beingAdded.table
       });
 
       guest.save((err) => {

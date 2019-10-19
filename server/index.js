@@ -4,16 +4,25 @@ var db = require('../database/index.js');
 
 var app = express();
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.use(express.static(__dirname + '/../public/'));
 
 app.get('/guests', (req, res) => {
-  db.fetch().then((data) => {
-    res.status(200);
-    res.send(JSON.stringify(data));
-  }).catch((err) => {
-    res.status(500).send({error: 'Unable to fetch guests from database'});
+  db.fetch((err, data) => {
+    if (err) {
+      res.status(500).send({error: 'Unable to fetch guests from database'});
+    } else {
+      res.status(200);
+      res.send(JSON.stringify(data));
+    }
   });
+  // db.fetch().then((data) => {
+  //   res.status(200);
+  //   res.send(JSON.stringify(data));
+  // }).catch((err) => {
+  //   res.status(500).send({error: 'Unable to fetch guests from database'});
+  // });
 });
 
 app.post('/guests', (req, res) => {

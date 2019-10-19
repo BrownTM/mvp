@@ -21,27 +21,15 @@ class AddGuest extends React.Component {
     });
   }
 
-  // handleRsvp(e) {
-  //   this.setState({
-  //     rsvp: e.target.value
-  //   });
-  // }
-
-  // handleMeal(e) {
-  //   this.setState({
-  //     meal: e.target.value
-  //   });
-  // }
-
-  // handleTable(e) {
-  //   this.setState({
-  //     table: e.target.value
-  //   });
-  // }
-
   addGuest() {
-    var name = this.state.firstName + ' ' + this.state.lastName;
-    this.props.onAdd(name);
+    if (this.state.firstName.length === 0) {
+      alert('Please enter a first name!');
+    } else if (this.state.lastName.length === 0) {
+      alert('Please enter a last name!');
+    } else {
+      var name = this.state.firstName + ' ' + this.state.lastName;
+      this.props.onAdd(name);
+    }
   }
 
   render() {
@@ -49,21 +37,7 @@ class AddGuest extends React.Component {
       <form>
         <input value={this.state.firstName} onChange={this.handleFirstName.bind(this)} placeholder='First Name'></input>
         <input value={this.state.lastName} onChange={this.handleLastName.bind(this)} placeholder='Last Name'></input>
-        {/* <select className="rsvpDrop" onChange={this.handleRsvp.bind(this)}>
-          <option value="accepted">Accepted</option>
-          <option value="declined">Declined</option>
-          <option value="noResponse">No Response</option>
-        </select>
-        <select className="mealDrop" onChange={this.handleMeal.bind(this)}>
-          <option value="noResponse">No Response</option>
-          <option value="chicken">Chicken</option>
-          <option value="beef">Beef</option>
-          <option value="vegetarian">Vegetarian</option>
-        </select>
-        <select className="tableDrop" onChange={this.handleTable.bind(this)}>
-          <option value="notAssigned">0</option>
-        </select> */}
-        <button onClick={this.addGuest.bind(this)}></button>
+        <button onClick={this.addGuest.bind(this)}>Submit</button>
       </form>
     );
   }
