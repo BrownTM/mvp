@@ -14,15 +14,9 @@ app.get('/guests', (req, res) => {
       res.status(500).send({error: 'Unable to fetch guests from database'});
     } else {
       res.status(200);
-      res.send(JSON.stringify(data));
+      res.send(data);
     }
   });
-  // db.fetch().then((data) => {
-  //   res.status(200);
-  //   res.send(JSON.stringify(data));
-  // }).catch((err) => {
-  //   res.status(500).send({error: 'Unable to fetch guests from database'});
-  // });
 });
 
 app.post('/guests', (req, res) => {

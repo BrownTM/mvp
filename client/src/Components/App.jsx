@@ -7,7 +7,13 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      guests: []
+      guests: [],
+      accepted: 0,
+      declined: 0,
+      noResponse: 0,
+      chicken: 0,
+      beef: 0,
+      vegetarian: 0
     }
   }
 
@@ -20,6 +26,37 @@ class App extends React.Component {
           guests: data
         });
       }
+    }).then((data) => {
+      var accepted = 0;
+      var declined = 0;
+      var noResponse = 0;
+      var chicken = 0;
+      var beef = 0;
+      var vegetarian = 0;
+      data.forEach((guest) => {
+        if (guest.rsvp === 'Accepted') {
+          accepted++;
+        } else if (guest.rsvp === 'Declined') {
+          declined++;
+        } else if (guest.rsvp === 'noResponse') {
+          noResponse++;
+        }
+        if (guest.meal === 'Chicken') {
+          chicken++;
+        } else if (guest.meal === 'Beef') {
+          beef++;
+        } else if (guest.meal === 'Vegetarian') {
+          vegetarian++;
+        }
+      });
+      this.setState({
+        accepted: accepted,
+        declined: declined,
+        noResponse: noResponse,
+        chicken: chicken,
+        beef: beef,
+        vegetarian: vegetarian
+      });
     });
   }
 
@@ -44,10 +81,8 @@ class App extends React.Component {
   }
 
   render() {
-    var guests = this.state.guests;
-    console.log(Array.isArray(guests));
-    console.log(guests);
-    var list;
+    // var guests = this.state.guests;
+    // var list;
     // if (guests.length === 0) {
     //   list = <span>Let's add some guests!</span>
     // } else {
@@ -59,13 +94,19 @@ class App extends React.Component {
     return (
       <div>
         <button onClick={this.handleAddGuest}>Add Guest</button>
+        <div>Accepted: {this.state.accepted}</div>
+        <div>Declined: {this.state.declined}</div>
+        <div>No Response: {this.state.noResponse}</div>
+        <div>Chicken: {this.state.chicken}</div>
+        <div>Beef: {this.state.beef}</div>
+        <div>Vegetarian: {this.state.vegetarian}</div>
         <div className="add" hidden>
           <AddGuest onAdd={this.add.bind(this)}/>
         </div>
-        {list}
-        {/* {guests.map((guest) => {
+        {/* {list} */}
+        {this.state.guests.map((guest) => {
           return <GuestList key={guest._id} guest={guest}/>
-        })} */}
+        })}
       </div>
     );
   }

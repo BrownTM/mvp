@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/guest', {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect('mongodb://localhost/guest', {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false});
 
 var db = mongoose.connection;
 
@@ -20,8 +20,8 @@ var guestSchema = mongoose.Schema({
 
 var Guest = mongoose.model('Guest', guestSchema);
 
-var fetch = function(callback) {
-  Guest.find({}, callback);
+var fetch = (callback) => {
+  Guest.find().lean().exec(callback);
 };
 
 var save = (guest) => {
@@ -44,8 +44,16 @@ var save = (guest) => {
   });
 };
 
-var update = (query, conditions) => {
-  return Guest.findOneAndUpdate(query, conditions);
+var update = (req) => {
+  if (req.rsvp && req.meal) {
+    return Guest.findOneAndUpdate({name: req.name}, {rsvp: req.rsvp, meal: req.meal});
+  } else if (req.rsvp) {
+    return Guest.findOneAndUpdate({name: req.name}, {rsvp: req.rsvp});
+  } else if (req.meal) {
+    return Guest.findOneAndUpdate({name: req.name}, {meal: req.meal});
+  } else if (req.table) {
+    return Guest.findOneAndUpdate({name: req.name}, {table: req.table});
+  }
 };
 
 var remove = (guest) => {
